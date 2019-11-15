@@ -10,16 +10,8 @@ let petSchema = mongoose.Schema({
 			required : true }
 });
 
-let users = mongoose.Schema({
-	username : {type : String},
-	password :{tyoe : String}
-});
-
 let Pet = mongoose.model( 'Pet', petSchema );
 
-let userList = {
-	
-};
 
 let PetList = {
 	get : function(){
@@ -43,5 +35,3 @@ let PetList = {
 };
 
 module.exports = { PetList };
-
-
