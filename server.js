@@ -2,6 +2,7 @@ let express = require( "express" );
 let morgan = require( "morgan" );
 let mongoose = require( "mongoose" );
 let bodyParser = require( "body-parser" );
+let bcrypt = require("bcrypt.js");
 let { PetList } = require('./model');
 let { DATABASE_URL, PORT } = require('./config');
 
@@ -31,6 +32,32 @@ let nameOfPets = [
 		typeOfPet : "Dog"
 	}
 ];
+
+app.get("/user/register", jsonParser, (req, res, next) =>{
+	let {username, password} = req.body;
+	User.get({username})
+		.then(user =>{
+			if(!user){
+				return bcrypt.hash(password, 10);
+			}
+		})
+		.then(hashPass => Users.register({username,password:hashPass}));
+});
+
+app.post("/user/login", jsonParser, (req,res,next)=>{
+	let {username, password} = req.body;
+	User.get({username})
+		.then(user => {
+			if(user){
+				return bcrypt.compare(password,user.password);
+			}
+		})
+		.then(isValid =>{
+			if(isValid){
+				//success
+			}
+		})
+});
 
 app.get( "/api/pets", ( req, res, next ) => {
 	PetList.get()
